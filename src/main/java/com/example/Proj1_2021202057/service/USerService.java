@@ -35,16 +35,6 @@ public class USerService {
                 System.out.println("it seems to doesnt have a file");
             }
 
-            // 3. Buffer를 사용해서 File에 write할 수 있는 BufferedWriter 생성
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter writer = new BufferedWriter(fw);
-
-            // 4. 파일에 쓰기
-            writer.write("안녕하세요");
-
-            // 5. BufferedWriter close
-            writer.close();
-
 
             FileWriter fileWriter = new FileWriter(fileName);
             fileWriter.write(us.getUserid());

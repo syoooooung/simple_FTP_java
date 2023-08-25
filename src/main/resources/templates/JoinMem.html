@@ -8,6 +8,7 @@
 <body>
 <div class="all">
   <h1>회원 가입</h1>
+  <h3>이미 존재하는 ID를 입력할 시엔, 입력 내용이 초기화 됩니다.</h3>
     <form action="/userInfo" method="post" enctype="multipart/form-data">
       <div class="id">
         <label >사용할 ID를 입력하세요 : </label>
@@ -23,6 +24,10 @@
       </div>
         <button type="submit">등록하기</button>
     </form>
+
+  <div th:if="${message}" class="message">
+    <p th:text="${message}" class="error-message"></p>
+  </div>
 </div>
 </body>
 </html>

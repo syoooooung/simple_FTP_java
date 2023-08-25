@@ -13,6 +13,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 
 
+import org.springframework.ui.Model;
+
 @Controller
 public class USerController {
     @Autowired
@@ -25,8 +27,24 @@ public class USerController {
     private URepository USerRepository;
 
     @PostMapping("/userInfo") //회원가입창에서 아이디와 비밀번호를 입력받았을 때
-    public RedirectView handleUserInfo(@ModelAttribute("usInfo") USerm usInfo) {
+    public RedirectView handleUserInfo(@ModelAttribute("usInfo") USerm usInfo, Model model) {
         try{
+            List<USerm> list = USerService.getUserList();
+            boolean IsExist = false;
+
+            for (USerm user : list) {
+                System.out.println(user.getUserid()+"  "+usInfo.getUserid());
+                if (user.getUserid().equals(usInfo.getUserid())) {
+                    IsExist = true;
+                    break; // 일치하는 유저를 찾았으므로 반복문 종료
+                }
+            }
+            if (IsExist) {
+                // 아이디가 이미 존재하는 것을 입력했다면
+                model.addAttribute("message", "이미 존재하는 아이디입니다.");
+                return new RedirectView("/JoinMem.html");
+            }
+
             USerService.saveUser(usInfo);
         } catch(Exception e){
             e.printStackTrace();
