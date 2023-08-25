@@ -1,0 +1,62 @@
+.all {
+    width: 800px;
+    margin: auto;
+    padding-top: 18px;
+    align-items: center;
+    text-align: center;
+}
+.page{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    font-size: 24px;
+}
+.on{
+    color: #000000;
+}
+.on:focus{
+    color: #ff0000;
+}
+.btn-type{
+    display: flex;
+    justify-content: center;
+}
+.box{
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    padding: 24px 0;
+    margin: 48px 0;
+}
+.stack{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+.title{
+    align-items: center;
+    display: flex;
+}
+.content{
+    display: flex;
+    align-items: center;
+}
+li{
+    padding: 2px;
+}
+a{
+    text-decoration: none;
+}
+button{
+    margin-top: 8px;
+}
+table{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    text-align: center;
+    border-collapse: collapse;
+}
+td{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}

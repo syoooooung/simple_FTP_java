@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo View</title>
+    <h1>게시글 수정</h1>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <style>
+        .photo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .photo-item img {
+            width: 400px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .photo-item h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .photo-item p {
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .button-container button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="all">
+    <div class="photo-container">
+        <div class="photo-item">
+            <img th:src="@{'../' + ${photo.imagePath}}" alt="Photo">
+            <h2 th:text="${photo.title}"></h2>
+            <p th:text="${photo.contents}"></p>
+        </div>
+        <div class="button-container">
+            <form th:action="@{'/ImageView.html/' + ${photo.id} + '/delete'}" method="post">
+                <button type="submit">삭제</button>
+            </form>
+            <a th:href="@{'/Upload.html/' + ${photo.id}}">
+                <button type="button">수정</button>
+            </a>
+            <a th:href="@{'/download/' + ${photo.imagePath}}" download="${photo.title + '.jpg'}">
+                <button type="button">이미지 다운로드</button>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

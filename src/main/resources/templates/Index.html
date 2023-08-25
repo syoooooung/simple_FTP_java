@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <style>
+        .photo-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .photo-item {
+            width: calc(33.33% - 10px);
+            margin-bottom: 20px;
+        }
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+        .photo-item h2 {
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="all">
+    <h1>사진 목록</h1>
+    <a th:href="@{'/Upload.html'}" style="float:right;">
+        <button type="button">사진 올리기</button>
+    </a>
+    <div class="photo-container">
+        <th:block th:if="${not #lists.isEmpty(photos)}">
+            <div th:each="photo : ${photos}" class="photo-item">
+                <div class="photo-item">
+                    <a th:href="@{'/ImageView.html/' + ${photo.id}}">
+                        <img th:src="${photo.imagePath}" th:style="'max-width: 100%; max-height: auto;'" />
+                        <p th:text="${photo.title}" style="color:black;"></p>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+        <div th:unless="${not #lists.isEmpty(photos)}">사진 없음</div>
+    </div>
+</div>
+</body>
+</html>
