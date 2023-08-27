@@ -12,6 +12,24 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ContentDisposition;
+import java.nio.charset.StandardCharsets;
+import org.springframework.http.HttpStatus;
+import org.springframework.core.io.InputStreamResource;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import org.springframework.util.FileCopyUtils;
+
 
 @Controller
 public class HomeController {
@@ -77,9 +95,38 @@ public class HomeController {
        // return "Index";
     }
 
-    @PostMapping("/ImageView.html/{id}/download")
-    public String downloadPhoto(@PathVariable Long id) {
+    @ResponseBody
+    @RequestMapping("/ImageView.html/{id}/download")
+    public String downloadPhoto(@PathVariable Long id,HttpServletRequest request, HttpServletResponse response, String name) {
+        byte[] down = null;
+        Optional<Img> photo = photoRepository.findById(id);
+        Img article = photo.get();
 
+        try {
+            String pathtmp = System.getProperty("user.dir") + "/src/main/resources/static";
+            pathtmp = pathtmp + "/" + article.getImagePath();
+
+            String pt = article.getImagePath();
+            System.out.println(pathtmp);
+            Path path = Paths.get(pathtmp);
+
+            File file = new File(pathtmp);
+            down= FileCopyUtils.copyToByteArray(file);
+            String filename = new String(file.getName().getBytes(), "8859_1");
+
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+            response.setContentLength(down.length);
+
+
+            System.out.println("hey1");
+            System.out.println("hey2");
+            System.out.println("hey3");
+           // ResponseEntity<Resource> respEntity = photoService.downloadPhot(id);
+            System.out.println("hey4");
+        }
+        catch (Exception e){
+            return "Error";  //에러 페이지 반환
+        }
         return "redirect:/";
     }
 }

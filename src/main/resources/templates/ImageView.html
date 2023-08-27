@@ -49,9 +49,9 @@
             <a th:href="@{'/Upload.html/' + ${photo.id}}">
                 <button type="button">수정</button>
             </a>
-            <a th:href="@{'/download/' + ${photo.imagePath}}" download="${photo.title + '.jpg'}">
-                <button type="button">이미지 다운로드</button>
-            </a>
+            <form th:action="@{'/ImageView.html/'+ ${photo.id} + '/download'}" method="post">
+                <button type="submit">이미지 다운로드</button>
+            </form>
         </div>
     </div>
 </div>
