@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Member List</title>
+  <!--  <link rel="stylesheet" type="text/css" href="/css/style.css">  -->
+
+</head>
+<body>
+
+<h1>회원 목록</h1>
+
+<th:block th:if="${not #lists.isEmpty(members)}">
+  <table border ="1" width="70%" height=200  bordercolor="black" >
+    <tr>
+      <td>ID</td>
+      <td>닉네임</td>
+      <td>회원 등급</td>
+      <td>관리</td>
+    </tr>
+    <tr th:each="eaUser : ${members}"  >
+      <td>
+          <p th:text="${eaUser.userid}" style="color:black;"></p>
+      </td>
+      <td>
+        <p  th:text="${eaUser.Nick_name}" style="color:black;"></p>
+      </td>
+      <td>
+        <p  th:text="${eaUser.user_class}" style="color:black;"></p>
+      </td>
+      <td>
+        <div style="display: flex; align-items: center;">
+          <th:block th:if="${esUser.user_class == 'new_us'}">
+            <form th:action="@{'/userList.html/' + ${members.id} + '/upgrade'}" method="post">
+              <button type="submit">업그레이드</button>
+              <span style="margin: 0 5px;">/</span>
+            </form>
+          </th:block>
+          <form th:action="@{'/userList.html/' + ${members.id} + '/delete'}" method="post">
+            <button type="submit">삭제</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+  </table>
+</th:block>
+<div th:unless="${not #lists.isEmpty(photos)}">사진 없음</div>
+
+
+</body>
+</html>

@@ -24,5 +24,5 @@ public class USerm {
     @Column
     private String Nick_name;
     @Column
-    private String user_class;
+    private String user_class; //manager_us, new_us, normal_us
 }

@@ -50,13 +50,3 @@ a{
 button{
     margin-top: 8px;
 }
-table{
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    text-align: center;
-    border-collapse: collapse;
-}
-td{
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-}

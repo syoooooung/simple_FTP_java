@@ -4,6 +4,7 @@ import com.example.Proj1_2021202057.domain.Img;
 import com.example.Proj1_2021202057.domain.USerm;
 import com.example.Proj1_2021202057.repository.UserRepository;
 import com.example.Proj1_2021202057.service.ImgService;
+import com.example.Proj1_2021202057.service.USerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +37,8 @@ public class HomeController {
     @Autowired
     private ImgService photoService;
     @Autowired
+    private USerService userService;
+    @Autowired
     private UserRepository photoRepository;
 
     @GetMapping({"/","/Login.html"}) //홈페이지 매핑
@@ -49,6 +52,13 @@ public class HomeController {
     public String Joinmem(Model model) {
         model.addAttribute("usInfo", new USerm());   //뷰 템플릿에서 usInfo라는 이름으로 USer객체에 접근할 수 있음
         return "JoinMem"; //JoinMem.html template 반환
+    }
+
+    @GetMapping("/userList.html")
+    public String userList(Model model){
+        List<USerm> usrs = userService.getUserList();
+        model.addAttribute("members", usrs);
+        return "userList";
     }
 
     @GetMapping("/Index.html") //인덱스 페이지 매핑
@@ -94,6 +104,17 @@ public class HomeController {
         return new RedirectView("/Index.html");
        // return "Index";
     }
+    @PostMapping("/userList.html/{id}/delete")
+    public RedirectView deleteUser(@PathVariable Long id) {
+        userService.deleteUSer(id);  //해당 id의 회원 삭제
+        return new RedirectView("/userList.html");
+    }
+
+    @PostMapping("/userList.html/{id}/upgrade")
+    public RedirectView upgradeUser(@PathVariable Long id) {
+        userService.upgradeUSer(id);  //해당 id의 회원 등급 업그레이드
+        return new RedirectView("/userList.html");
+    }
 
     @ResponseBody
     @RequestMapping("/ImageView.html/{id}/download")
@@ -117,12 +138,8 @@ public class HomeController {
             response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
             response.setContentLength(down.length);
 
-
             System.out.println("hey1");
-            System.out.println("hey2");
-            System.out.println("hey3");
            // ResponseEntity<Resource> respEntity = photoService.downloadPhot(id);
-            System.out.println("hey4");
         }
         catch (Exception e){
             return "Error";  //에러 페이지 반환

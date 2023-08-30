@@ -23,7 +23,15 @@ public class USerService {
 
     public void saveUser(USerm us) {
         System.out.println("PLZ print me hueueu");
-        // 이미지 저장
+        String str_Manager = "syoung";
+        if(str_Manager.equals(us.getUserid())){
+            us.setUser_class("manager_us"); //매니저는 syoung
+        }
+        else{
+            us.setUser_class("new_us"); //매니저를 제외한 아이디는 새로운 유저
+        }
+
+        // 유저 저장
         userRepository.save(us);
 
         String fileName = "UserData.txt";
@@ -34,8 +42,6 @@ public class USerService {
                 file.createNewFile();
                 System.out.println("it seems to doesnt have a file");
             }
-
-
             FileWriter fileWriter = new FileWriter(fileName);
             fileWriter.write(us.getUserid());
             fileWriter.write(" "+us.getPassword());
@@ -50,7 +56,6 @@ public class USerService {
 
     public List<USerm> getUserList() { // 업로드된 사진과 타이틀을 가져오는 로직
 //        Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
-
         List<USerm> list = userRepository.findAll();  // User Repository에 저장된 모든 사진을 가져옴
         int sz = list.size();
         System.out.println("List size: " + sz);
@@ -60,5 +65,15 @@ public class USerService {
     public USerm getUSERINFOById(Long id){
         Optional<USerm> us = userRepository.findById(id);  //optional은 만약 해당 id에 해당하는 것이 없을경우 null을 반환
         return us.orElse(null);
+    }
+
+    public void deleteUSer(Long id){
+        userRepository.deleteById(id);
+    }
+
+    public void upgradeUSer(Long id){
+        Optional<USerm> us = userRepository.findById(id);
+        USerm uus = us.get();
+        uus.setUser_class("normal_us");
     }
 }
