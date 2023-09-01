@@ -3,8 +3,10 @@ package com.example.Proj1_2021202057;
 import com.example.Proj1_2021202057.domain.Img;
 import com.example.Proj1_2021202057.domain.USerm;
 import com.example.Proj1_2021202057.repository.UserRepository;
+import com.example.Proj1_2021202057.repository.URepository;
 import com.example.Proj1_2021202057.service.ImgService;
 import com.example.Proj1_2021202057.service.USerService;
+import com.example.Proj1_2021202057.controller.USerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +42,11 @@ public class HomeController {
     private USerService userService;
     @Autowired
     private UserRepository photoRepository;
+    @Autowired
+    private URepository uRepository;
+
+    @Autowired
+    private USerController uSercontroller;
 
     @GetMapping({"/","/Login.html"}) //홈페이지 매핑
     public String home(Model model) { //업로드된 사진 들을 가져와 모델에 추가
@@ -62,9 +69,13 @@ public class HomeController {
     }
 
     @GetMapping("/Index.html") //인덱스 페이지 매핑
-    public String Index(Model model) { //업로드된 사진 들을 가져와 모델에 추가
+    public String Index( Model model) { //업로드된 사진 들을 가져와 모델에 추가
         List<Img> photos = photoService.getUploadedPhotos();
         model.addAttribute("photos", photos);
+
+        Long idtemp = uSercontroller.getCurrent_login_class();
+        USerm us = uRepository.findById(idtemp).get();
+        model.addAttribute("userclass", us);
         return "Index"; //index.html view template 반환
     }
 
@@ -138,7 +149,6 @@ public class HomeController {
             response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
             response.setContentLength(down.length);
 
-            System.out.println("hey1");
            // ResponseEntity<Resource> respEntity = photoService.downloadPhot(id);
         }
         catch (Exception e){

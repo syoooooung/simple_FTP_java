@@ -26,6 +26,8 @@ public class USerController {
     @Autowired
     private URepository USerRepository;
 
+    private Long current_login_class=0L;
+
     @PostMapping("/userInfo") //회원가입창에서 아이디와 비밀번호를 입력받았을 때
     public RedirectView handleUserInfo(@ModelAttribute("usInfo") USerm usInfo, Model model) {
         try{
@@ -58,17 +60,18 @@ public class USerController {
     public RedirectView checkUserID(@ModelAttribute("usInfo") USerm usInfo){
         try{
             List<USerm> list = USerService.getUserList();
-
+            Long userid = 0L;   //유저 아이디 임시로 초기화
             boolean userFound = false;
             for (USerm user : list) {
                 System.out.println(user.getUserid()+"  "+usInfo.getUserid());
                 if (user.getUserid().equals(usInfo.getUserid()) &&
                         user.getPassword().equals(usInfo.getPassword())) {
+                    current_login_class = user.getId();  //해당 유저 아이디 저장
+
                     userFound = true;
                     break; // 일치하는 유저를 찾았으므로 반복문 종료
                 }
             }
-
             if (userFound) {
                 // 로그인 성공 시 처리
                 return new RedirectView("/Index.html");
@@ -81,7 +84,7 @@ public class USerController {
         } catch(Exception e){
             return new RedirectView("/Error.html"); //에러 페이지로 Redirection
         }
-        return new RedirectView("/Index.html"); //로그인 페이지로 redirection
+        return new RedirectView("/Login.html"); //로그인 페이지로 redirection
     }
     /*
     @PostMapping("/JoinMem.html")
@@ -91,4 +94,7 @@ public class USerController {
         return "redirect:/login"; // 가입 후 로그인 페이지로 리다이렉트
     }
 */
+    public Long getCurrent_login_class(){
+        return current_login_class;
+    }
 }
