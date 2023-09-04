@@ -2,32 +2,79 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .login-container h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .login-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .login-button:hover {
+            background-color: #0056b3;
+        }
+        .signup-link {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-<div class="all">
+<div class="login-container">
   <h1>로그인</h1>
   <form action="/IsMem" method="post" enctype="multipart/form-data">
     <div>
       <label >ID:</label>
-      <input type="text"  name="userid" required>
+      <input class="login-input" type="text"  name="userid" required>
     </div>
     <div>
       <label >PASSWORD:</label>
-      <input type="password"  name="password" required>
+      <input class="login-input" type="password"  name="password" required>
     </div>
     <div>
-        <button type="submit">로그인</button>
+        <button class="login-button" type="submit">로그인</button>
     </div>
 
   </form>
+  <div>
+    <a th:href="@{'JoinMem.html'}" >
+      <button class="login-button" type="submit">회원 가입</button>
+    </a>
+  </div>
 </div>
-<div>
-  <a th:href="@{'JoinMem.html'}" >
-    <button type="submit">회원 가입</button>
-  </a>
-</div>
-
 </body>
 </html>

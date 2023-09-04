@@ -9,6 +9,8 @@ import com.example.Proj1_2021202057.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -70,7 +72,7 @@ public class USerService {
     public void deleteUSer(Long id){
         userRepository.deleteById(id);
     }
-
+    @Transactional
     public void upgradeUSer(Long id){
         Optional<USerm> us = userRepository.findById(id);
         USerm uus = us.get();
