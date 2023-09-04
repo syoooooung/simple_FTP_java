@@ -25,8 +25,13 @@ import org.springframework.http.ContentDisposition;
 import java.nio.charset.StandardCharsets;
 import org.springframework.http.HttpStatus;
 import org.springframework.core.io.InputStreamResource;
+import java.io.FileInputStream;
+import org.springframework.util.FileCopyUtils;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.OutputStream;
+
 import java.nio.file.Files;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -133,10 +138,13 @@ public class HomeController {
         byte[] down = null;
         Optional<Img> photo = photoRepository.findById(id);
         Img article = photo.get();
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.add("content-Disposition", "attachment; 	filename=new String(resourceName.getBytes("UTF-8"),"ISO-8859-	1"));
 
         try {
             String pathtmp = System.getProperty("user.dir") + "/src/main/resources/static";
             pathtmp = pathtmp + "/" + article.getImagePath();
+
 
             String pt = article.getImagePath();
             System.out.println(pathtmp);
@@ -145,9 +153,18 @@ public class HomeController {
             File file = new File(pathtmp);
             down= FileCopyUtils.copyToByteArray(file);
             String filename = new String(file.getName().getBytes(), "8859_1");
+            System.out.println(filename);
 
             response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+            //response.setContentType()
             response.setContentLength(down.length);
+
+            OutputStream out = response.getOutputStream();
+            FileInputStream fis = null;
+            fis=new FileInputStream(file);
+            FileCopyUtils.copy(fis, out);
+            fis.close();
+            out.flush();
 
            // ResponseEntity<Resource> respEntity = photoService.downloadPhot(id);
         }
