@@ -28,4 +28,6 @@ public class Img {
     private LocalDateTime createdTime;
     @Column //Table Column named image
     private String imagePath;
+    @Column //Table Column named image
+    private String IsImg;
 }

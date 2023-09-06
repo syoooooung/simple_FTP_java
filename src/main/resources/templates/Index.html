@@ -5,20 +5,76 @@
     <title>Home</title>
   <!--  <link rel="stylesheet" type="text/css" href="/css/style.css">  -->
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .button-container {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .button-container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .photo-title {
+            font-weight: bold;
+        }
+
+        .image-path, .create-time {
+            color: #777;
+        }
     </style>
 </head>
 <body>
-
-    <h1>사진 목록</h1>
-    <a th:href="@{'/Upload.html'}" style="float:right;">
-        <button type="button">사진 올리기</button>
-    </a>
-    <th:block th:if="${userclass.user_class} == 'manager_us'">
-        <a th:href="@{'/userList.html'}" style="float:right;">
-            <button type="button">회원 관리</button>
+<div class="container">
+    <h1>게시물 목록</h1>
+    <div class = "button-container">
+        <a th:href="@{'/Upload.html'}" style="margin-right: 10px;">
+            <button type="button">사진 올리기</button>
         </a>
-    </th:block>
+        <th:block th:if="${userclass.user_class} == 'manager_us'">
+            <a th:href="@{'/userList.html'}" style="float:right;">
+                <button type="button">회원 관리</button>
+            </a>
+        </th:block>
+    </div>
         <th:block th:if="${not #lists.isEmpty(photos)}">
             <table border ="1" width="50%" height=200  bordercolor="black" >
                 <tr>
@@ -43,6 +99,6 @@
             </table>
         </th:block>
         <div th:unless="${not #lists.isEmpty(photos)}">사진 없음</div>
-
+</div>
 </body>
 </html>

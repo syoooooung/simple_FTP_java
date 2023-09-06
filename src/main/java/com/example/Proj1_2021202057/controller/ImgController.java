@@ -48,9 +48,13 @@ public class ImgController {
                 String contentType = multipartfile.getContentType();
                 if (ObjectUtils.isEmpty(contentType)){return new RedirectView("/Error.html");}
                 else {
-                    if (!contentType.matches("image/(jpeg|png|jpg|JPEG|PNG|JPG)")) {
-                        return new RedirectView("/Error.html");
-                    } //img 타입은 jpe, png, jpg 만 허용
+                    if (contentType.matches("image/(jpeg|png|jpg|JPEG|PNG|JPG)")) {
+                       // return new RedirectView("/Error.html");
+                        photo.setIsImg("true"); //이미지라면 true
+                    }
+                    else{ //나머지 파일은 false로 저장해줌
+                        photo.setIsImg("false");
+                    }
                 }
                 photo.setCreatedTime(LocalDateTime.now(Clock.systemDefaultZone())); // create 시간 저장
 
@@ -59,6 +63,8 @@ public class ImgController {
                 multipartfile.transferTo(file);
                 photo.setImagePath(new_file_name); // image path 해당 경로에 저장 해주기
                 System.out.println(file.getAbsolutePath());
+
+
                 photoService.savePhoto(photo); // image save
 
 
@@ -97,16 +103,9 @@ public class ImgController {
                     if (ObjectUtils.isEmpty(contentType)) {
                         return new RedirectView("/Error.html");
                     } else {
-                        if (contentType.contains("image/jpeg")) {
-                        } else if (contentType.contains("image/png")) {
-                        } else if (contentType.contains("image/jpg")) {
-                        }
-                        // 파일 명이 다르면 안 해줌
-                        else {
-                            return new RedirectView("/Error.html");
-                        }
+
                     }
-                    photoEntity.setCreatedTime(updatedPhoto.getCreatedTime());
+                    photoEntity.setCreatedTime(LocalDateTime.now(Clock.systemDefaultZone()));
                     String new_file_name = modiFile.getOriginalFilename(); // 파일 이름 생성
                     file = new File(path + "/" + new_file_name); // 파일 저장
                     modiFile.transferTo(file);
