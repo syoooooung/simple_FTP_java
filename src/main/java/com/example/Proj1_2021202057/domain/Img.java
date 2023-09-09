@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import org.springframework.util.MultiValueMap;
 
 @Entity
 @Getter
@@ -28,6 +29,10 @@ public class Img {
     private LocalDateTime createdTime;
     @Column //Table Column named image
     private String imagePath;
-    @Column //Table Column named image
+    @Column //Table Column named IsImg
     private String IsImg;
+    @Column
+    private Integer viewcount;
+    @Column
+    private MultiValueMap<Long, String> comments;
 }

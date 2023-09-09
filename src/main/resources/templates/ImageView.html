@@ -36,7 +36,7 @@
 </head>
 <body>
 <div class="all">
-    <a th:href="@{'/Index.html'}" style="margin-right: 400px;">
+    <a th:href="@{'/'+${userclass.id} +'/Index.html'}" style="margin-right: 400px;">
         <button type="button">목록으로 돌아가기</button>
     </a>
     <div class="photo-container">
@@ -53,7 +53,7 @@
                 <th>파일</th>
                 <td>
                     <p th:text="${photo.imagePath}"></p>
-                    <form th:action="@{'/ImageView.html/'+ ${photo.id} + '/download'}" method="post">
+                    <form th:action="@{'/'+${userclass.id} +'/ImageView.html/'+ ${photo.id} + '/download'}" method="post">
                         <th:block th:if="${photo.IsImg == 'true' }">
                             <img th:src="@{'../' + ${photo.imagePath}}" alt="Photo" style="max-width: 400px; height: auto;">
                         </th:block>
@@ -67,15 +67,17 @@
             </tr>
         </table>
         <div class="button-container">
-            <form th:action="@{'/ImageView.html/' + ${photo.id} + '/delete'}" method="post">
+            <form th:action="@{'/'+${userclass.id} +'/ImageView.html/' + ${photo.id} + '/delete'}" method="post">
                 <button type="submit">게시물 삭제</button>
             </form>
-            <a th:href="@{'/Upload.html/' + ${photo.id}}">
+            <a th:href="@{'/'+${userclass.id} +'/Upload.html/' + ${photo.id}}">
                 <button type="button">게시물 수정</button>
             </a>
 
         </div>
     </div>
 </div>
+
+
 </body>
 </html>

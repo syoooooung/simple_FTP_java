@@ -74,7 +74,7 @@ public class USerController {
             }
             if (userFound) {
                 // 로그인 성공 시 처리
-                return new RedirectView("/Index.html");
+                return new RedirectView(current_login_class+"/Index.html");
             } else if(!userFound) {
                 // 로그인 실패 시 처리
                // return new RedirectView("/Error.html");

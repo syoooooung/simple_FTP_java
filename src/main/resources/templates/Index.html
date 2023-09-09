@@ -66,7 +66,7 @@
 <div class="container">
     <h1>게시물 목록</h1>
     <div class = "button-container">
-        <a th:href="@{'/Upload.html'}" style="margin-right: 10px;">
+        <a th:href="@{'/'+${userclass.id} +'/Upload.html'}" style="margin-right: 10px;">
             <button type="button">사진 올리기</button>
         </a>
         <th:block th:if="${userclass.user_class} == 'manager_us'">
@@ -80,11 +80,12 @@
                 <tr>
                     <td>제목</td>
                     <td>파일 명</td>
+                    <td>조회수</td>
                     <td>등록 날짜</td>
                 </tr>
                 <tr th:each="photo : ${photos}" class="photo-item" >
                     <td>
-                        <a th:href="@{'/ImageView.html/' + ${photo.id}}">
+                        <a th:href="@{'/'+${userclass.id}+'/ImageView.html/' + ${photo.id}}">
                             <!--    <img th:src="${photo.imagePath}" th:style="'max-width: 100%; max-height: auto;'" /> -->
                             <p class="photo-title" th:text="${photo.title}" style="color:black;"></p>
                         </a>
@@ -93,12 +94,15 @@
                         <p class="image-path" th:text="${photo.imagePath}" style="color:black;"></p>
                     </td>
                     <td>
+                        <p class="image-path" th:text="${photo.viewcount}" style="color:black;"></p>
+                    </td>
+                    <td>
                         <p class="create-time" th:text="${photo.createdTime}" style="color:black;"></p>
                     </td>
                 </tr>
             </table>
         </th:block>
-        <div th:unless="${not #lists.isEmpty(photos)}">사진 없음</div>
+        <div th:unless="${not #lists.isEmpty(photos)}">게시물 없음</div>
 </div>
 </body>
 </html>

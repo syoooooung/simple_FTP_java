@@ -18,6 +18,8 @@ import org.springframework.http.ContentDisposition;
 import java.nio.charset.StandardCharsets;
 import org.springframework.http.HttpStatus;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
@@ -69,4 +71,15 @@ public class ImgService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @Transactional
+    public void plus_viewcount(Long id){
+        Optional<Img> photo = photoRepository.findById(id);
+        Img article = photo.get();
+        int precount = article.getViewcount();
+        precount=precount+1;
+        article.setViewcount(precount);
+    }
+
+
 }

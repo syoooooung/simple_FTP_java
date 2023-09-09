@@ -3,7 +3,7 @@ package com.example.Proj1_2021202057.controller;
 import com.example.Proj1_2021202057.domain.Img;
 import com.example.Proj1_2021202057.repository.UserRepository;
 import com.example.Proj1_2021202057.service.ImgService;
-
+import com.example.Proj1_2021202057.domain.USerm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-
+//img보다는 게시판 관리라고 보면 됩니다.
 @Controller
 public class ImgController {
 
@@ -31,8 +31,9 @@ public class ImgController {
     @Autowired
     private UserRepository photoRepository;
 
-    @PostMapping("/Photo")
+    @PostMapping("/{userid}/Photo")
     public RedirectView handleFileUpload(@ModelAttribute("photo") Img photo,
+                                         @PathVariable Long userid,
                                          @RequestParam("photoFile") MultipartFile multipartfile) {
         try {
             if (!multipartfile.isEmpty()) {
@@ -57,7 +58,7 @@ public class ImgController {
                     }
                 }
                 photo.setCreatedTime(LocalDateTime.now(Clock.systemDefaultZone())); // create 시간 저장
-
+                photo.setViewcount(0);
                 String new_file_name = multipartfile.getOriginalFilename(); // 파일 이름 생성 해주기
                 file = new File(path + "/" + new_file_name); // 파일 경로에 저장 해주기
                 multipartfile.transferTo(file);
@@ -74,12 +75,13 @@ public class ImgController {
             // 오류 메시지 표시
             return new RedirectView("/Error.html"); //에러 페이지로 Redirection
         }
-        return new RedirectView("/Index.html"); //index 로 redirection
+        return new RedirectView("/"+userid+"/Index.html"); //index 로 redirection
     }
 
 
-    @PostMapping("/Photo/{id}")
+    @PostMapping("/{userid}/Photo/{id}")
     public RedirectView updatePhoto(@ModelAttribute("photo") Img updatedPhoto,
+                                    @PathVariable Long userid,
                                     @PathVariable Long id,
                                     @RequestParam("modiFile") MultipartFile modiFile) throws IOException {
         Optional<Img> photo = photoRepository.findById(id);
@@ -115,7 +117,7 @@ public class ImgController {
                 }
                 photoRepository.save(photoEntity);
             }
-            return new RedirectView("/Index.html");
+            return new RedirectView("/"+userid+"/Index.html");
 
         }
         catch (Exception e){

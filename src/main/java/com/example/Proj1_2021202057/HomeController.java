@@ -73,37 +73,48 @@ public class HomeController {
         return "userList";
     }
 
-    @GetMapping("/Index.html") //인덱스 페이지 매핑
-    public String Index( Model model) { //업로드된 사진 들을 가져와 모델에 추가
+    @GetMapping("/{userid}/Index.html") //인덱스 페이지 매핑
+    public String Index( Model model, @PathVariable Long userid) { //업로드된 사진 들을 가져와 모델에 추가
         List<Img> photos = photoService.getUploadedPhotos();
         model.addAttribute("photos", photos);
-
+/* 너네 잠깐만 가둬둘 애들
         Long idtemp = uSercontroller.getCurrent_login_class();
         USerm us = uRepository.findById(idtemp).get();
+        model.addAttribute("userclass", us);
+
+ */
+        USerm us = uRepository.findById(userid).get();  //id에 해당하는 정보를 가져와 모델에 추가
         model.addAttribute("userclass", us);
         return "Index"; //index.html view template 반환
     }
 
-    @GetMapping("/Upload.html")
-    public String upload(Model model) { //imgae upload 페이지 매핑
+    @GetMapping("/{userid}/Upload.html")
+    public String upload(@PathVariable Long userid, Model model) { //imgae upload 페이지 매핑
         model.addAttribute("photo", new Img());
+        USerm us = uRepository.findById(userid).get();  //id에 해당하는 정보를 가져와 모델에 추가
+        model.addAttribute("userclass", us);
         return "Upload"; //upload.html view template 반환
     }
 
-    @GetMapping("/Upload.html/{id}")
-    public String modify(Model model, @PathVariable Long id) {
+    @GetMapping("/{userid}/Upload.html/{id}")
+    public String modify(Model model,@PathVariable Long userid, @PathVariable Long id) {
         Img photo = photoRepository.findById(id).get();  //id에 해당하는 정보를 가져와 모델에 추가
         model.addAttribute("photo", photo);
+        USerm us = uRepository.findById(userid).get();  //id에 해당하는 정보를 가져와 모델에 추가
+        model.addAttribute("userclass", us);
         return "Upload"; //upload.html view tmeplate 반환
     }
 
-    @GetMapping("/ImageView.html/{id}")
-    public String viewer(Model model, @PathVariable Long id) {
+    @GetMapping("/{userid}/ImageView.html/{id}")
+    public String viewer(Model model, @PathVariable Long userid, @PathVariable Long id) {
         try {
             Optional<Img> photo = photoRepository.findById(id);
             if (photo.isPresent()) {
                 Img photoEntity = photo.get();
                 model.addAttribute("photo", photoEntity); //image 정보 모델에 추가
+                USerm us = uRepository.findById(userid).get();  //id에 해당하는 정보를 가져와 모델에 추가
+                model.addAttribute("userclass", us);
+                photoService.plus_viewcount(photoEntity.getId());
                 return "ImageView";
             }
         }
@@ -114,10 +125,10 @@ public class HomeController {
         return "redirect:/"; //홈페이지로 리다이렉ㅌㅡ
     }
 
-    @PostMapping("/ImageView.html/{id}/delete")
-    public RedirectView deletePhoto(@PathVariable Long id) {
+    @PostMapping("/{userid}/ImageView.html/{id}/delete")
+    public RedirectView deletePhoto(@PathVariable Long userid,@PathVariable Long id) {
         photoService.deletePhoto(id);  //해당 id의 사진 삭제
-        return new RedirectView("/Index.html");
+        return new RedirectView("/"+userid+"/Index.html");
        // return "Index";
     }
     @PostMapping("/userList.html/{id}/delete")
@@ -133,8 +144,8 @@ public class HomeController {
     }
 
     @ResponseBody
-    @RequestMapping("/ImageView.html/{id}/download")
-    public String downloadPhoto(@PathVariable Long id,HttpServletRequest request, HttpServletResponse response, String name) {
+    @RequestMapping("/{userid}/ImageView.html/{id}/download")
+    public String downloadPhoto(@PathVariable Long userid,@PathVariable Long id,HttpServletRequest request, HttpServletResponse response, String name) {
         byte[] down = null;
         Optional<Img> photo = photoRepository.findById(id);
         Img article = photo.get();
