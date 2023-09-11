@@ -9,7 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import org.springframework.util.MultiValueMap;
-
+import java.util.List;
+import java.util.ArrayList;
 @Entity
 @Getter
 @Setter
@@ -34,5 +35,7 @@ public class Img {
     @Column
     private Integer viewcount;
     @Column
-    private MultiValueMap<Long, String> comments;
+    private Long writer;
+    @Column
+    private String writername;
 }

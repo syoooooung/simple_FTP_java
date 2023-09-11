@@ -28,6 +28,7 @@
       <td>ID</td>
       <td>닉네임</td>
       <td>회원 등급</td>
+      <td>승인</td>
       <td>관리</td>
     </tr>
     <tr th:each="eaUser : ${members}"  >
@@ -39,6 +40,15 @@
       </td>
       <td>
         <p  th:text="${eaUser.user_class}" style="color:black;"></p>
+      </td>
+      <td>
+        <div th:if="${eaUser.ispermit == 'true'}">승인 완료
+        </div>
+        <div th:if="${eaUser.ispermit == 'false'}">
+          <form th:action="@{'/userList.html/' + ${eaUser.id} + '/permit'}" method="post">
+            <button type="submit">승인</button>
+          </form>
+        </div>
       </td>
       <td>
            <div style="display: flex; align-items: center;">

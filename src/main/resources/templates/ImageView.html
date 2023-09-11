@@ -50,12 +50,16 @@
                <td> <p th:text="${photo.title}"></p> </td>
            </tr>
             <tr>
+                <th>글쓴이</th>
+                <td> <p th:text="${photo.writername}"></p> </td>
+            </tr>
+            <tr>
                 <th>파일</th>
                 <td>
                     <p th:text="${photo.imagePath}"></p>
                     <form th:action="@{'/'+${userclass.id} +'/ImageView.html/'+ ${photo.id} + '/download'}" method="post">
                         <th:block th:if="${photo.IsImg == 'true' }">
-                            <img th:src="@{'../' + ${photo.imagePath}}" alt="Photo" style="max-width: 400px; height: auto;">
+                            <!-- <img th:src="@{'../' + ${photo.imagePath}}" alt="Photo"  th:style="max-width: 400px; height: auto;"> -->
                         </th:block>
                         <button type="submit">파일 다운로드</button>
                     </form>
@@ -67,17 +71,55 @@
             </tr>
         </table>
         <div class="button-container">
-            <form th:action="@{'/'+${userclass.id} +'/ImageView.html/' + ${photo.id} + '/delete'}" method="post">
-                <button type="submit">게시물 삭제</button>
-            </form>
-            <a th:href="@{'/'+${userclass.id} +'/Upload.html/' + ${photo.id}}">
-                <button type="button">게시물 수정</button>
-            </a>
+            <th:block th:if="${userclass.user_class} == 'manager_us'">
+                <form th:action="@{'/'+${userclass.id} +'/ImageView.html/' + ${photo.id} + '/delete'}" method="post">
+                    <button type="submit">게시물 삭제</button>
+                </form>
+            </th:block>
+            <th:block th:unless="${userclass.user_class} == 'manager_us'">
+                <th:block th:if="${userclass.id eq photo.writer}">
+                    <form th:action="@{'/'+${userclass.id} +'/ImageView.html/' + ${photo.id} + '/delete'}" method="post">
+                        <button type="submit">게시물 삭제</button>
+                    </form>
+                </th:block>
+            </th:block>
+            <th:block th:if="${userclass.user_class} != 'new_us'">
+                <a th:href="@{'/'+${userclass.id} +'/Upload.html/' + ${photo.id}}">
+                    <button type="button">게시물 수정</button>
+                </a>
+            </th:block>
 
         </div>
     </div>
 </div>
 
+<div class="photo-container">
+<th:block th:if="${not #lists.isEmpty(commentsId)}">
+    <table width="50%" height="200" style="table-layout: fixed;">
+        <tr th:each="index : ${#numbers.sequence(0, #lists.size(commentsId)-1)}"  bordercolor="black">
+            <td th:text="${commentsId[index]}"></td>
+            <td>
+                <div style="display: flex; align-items: center;">
+                    <p th:text="${commentsString[index]}" style="flex: 1;"></p>
+                    <th:block th:if="${userclass.Nick_name eq commentsId[index]}">
+                        <form th:action="@{'/'+${userclass.id} +'/ImageView.html/' + ${photo.id} + '/'+${cmtId[index]} + '/commentdelete'}" method="post">
+                            <button type="submit">삭제</button>
+                        </form>
+                    </th:block>
+                </div>
+            </td>
+        </tr>
+    </table>
+</th:block>
+<div th:unless="${not #lists.isEmpty(commentsId)}">댓글 없음</div>
+</div>
+
+<form th:action="@{'/' + ${userclass.id} + '/Comment/'+ ${photo.id}}" method="post" enctype="multipart/form-data">
+    <div style="text-align: center;">
+        <textarea name="commentstring" style="width: 600px; height: 50px; font-size: 16px;">댓글을 입력하세요.</textarea>
+        <button type="submit">등록</button>
+    </div>
+</form>
 
 </body>
 </html>

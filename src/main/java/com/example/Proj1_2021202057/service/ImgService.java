@@ -35,12 +35,11 @@ public class ImgService {
     }
 
     public List<Img> getUploadedPhotos() { // 업로드된 사진과 타이틀을 가져오는 로직
-
         Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
-
         List<Img> list = photoRepository.findAll(sort);  // User Repository에 저장된 모든 사진을 가져옴
         return list;
     }
+
 
     public void deletePhoto(Long id){
         photoRepository.deleteById(id);

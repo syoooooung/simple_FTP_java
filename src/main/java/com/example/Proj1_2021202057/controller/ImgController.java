@@ -1,9 +1,14 @@
 package com.example.Proj1_2021202057.controller;
 
 import com.example.Proj1_2021202057.domain.Img;
+import com.example.Proj1_2021202057.domain.COMMENT;
 import com.example.Proj1_2021202057.repository.UserRepository;
+import com.example.Proj1_2021202057.repository.UserRepository;
+import com.example.Proj1_2021202057.repository.URepository;
 import com.example.Proj1_2021202057.service.ImgService;
+import com.example.Proj1_2021202057.service.CmmtService;
 import com.example.Proj1_2021202057.domain.USerm;
+import com.example.Proj1_2021202057.service.USerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
@@ -17,20 +22,27 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Optional;
-
+import java.util.List;
+import java.util.ArrayList;
 //img보다는 게시판 관리라고 보면 됩니다.
 @Controller
 public class ImgController {
 
     @Autowired
     private ImgService photoService;
+    @Autowired
+    private CmmtService commentService;
 
     @Autowired
     private ResourceLoader resourceLoader;
 
     @Autowired
     private UserRepository photoRepository;
+    @Autowired
+    private URepository uRepository;
 
+    @Autowired
+    private USerService userService;
     @PostMapping("/{userid}/Photo")
     public RedirectView handleFileUpload(@ModelAttribute("photo") Img photo,
                                          @PathVariable Long userid,
@@ -59,6 +71,9 @@ public class ImgController {
                 }
                 photo.setCreatedTime(LocalDateTime.now(Clock.systemDefaultZone())); // create 시간 저장
                 photo.setViewcount(0);
+                USerm us = uRepository.findById(userid).get();
+                photo.setWriter(userid);
+                photo.setWritername(us.getNick_name()); //게시물 작성자 저장
                 String new_file_name = multipartfile.getOriginalFilename(); // 파일 이름 생성 해주기
                 file = new File(path + "/" + new_file_name); // 파일 경로에 저장 해주기
                 multipartfile.transferTo(file);
@@ -125,5 +140,23 @@ public class ImgController {
         }
     }
 
-
+    @PostMapping("/{userid}/Comment/{id}")
+    public RedirectView updatePhoto(@ModelAttribute("comment") COMMENT newcomment,
+                                    @PathVariable Long userid,
+                                    @PathVariable Long id) throws IOException {
+        Optional<Img> photo = photoRepository.findById(id);
+        try {
+            if (photo.isPresent()) {
+                Img photoEntity = photo.get();
+                newcomment.setPhotoid(photoEntity.getId());
+                newcomment.setUserid(userid);
+                commentService.saveComment(newcomment);
+            }
+        } catch (Exception e) { //exception 예외 처리
+            e.printStackTrace();
+            // 오류 메시지 표시
+            return new RedirectView("/Error.html"); //에러 페이지로 Redirection
+        }
+        return new RedirectView("/"+userid+"/ImageView.html/"+id);
+    }
 }

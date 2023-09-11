@@ -2,8 +2,12 @@ package com.example.Proj1_2021202057;
 
 import com.example.Proj1_2021202057.domain.Img;
 import com.example.Proj1_2021202057.domain.USerm;
+import com.example.Proj1_2021202057.domain.COMMENT;
 import com.example.Proj1_2021202057.repository.UserRepository;
+import com.example.Proj1_2021202057.repository.CmmtRepository;
 import com.example.Proj1_2021202057.repository.URepository;
+import com.example.Proj1_2021202057.repository.CmmtRepository;
+import com.example.Proj1_2021202057.service.CmmtService;
 import com.example.Proj1_2021202057.service.ImgService;
 import com.example.Proj1_2021202057.service.USerService;
 import com.example.Proj1_2021202057.controller.USerController;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +51,13 @@ public class HomeController {
     @Autowired
     private USerService userService;
     @Autowired
+    private CmmtService commentService;
+    @Autowired
     private UserRepository photoRepository;
     @Autowired
     private URepository uRepository;
+    @Autowired
+    private CmmtRepository commentRepository;
 
     @Autowired
     private USerController uSercontroller;
@@ -81,7 +90,6 @@ public class HomeController {
         Long idtemp = uSercontroller.getCurrent_login_class();
         USerm us = uRepository.findById(idtemp).get();
         model.addAttribute("userclass", us);
-
  */
         USerm us = uRepository.findById(userid).get();  //id에 해당하는 정보를 가져와 모델에 추가
         model.addAttribute("userclass", us);
@@ -109,12 +117,32 @@ public class HomeController {
     public String viewer(Model model, @PathVariable Long userid, @PathVariable Long id) {
         try {
             Optional<Img> photo = photoRepository.findById(id);
+            model.addAttribute("comment", new COMMENT());
             if (photo.isPresent()) {
                 Img photoEntity = photo.get();
                 model.addAttribute("photo", photoEntity); //image 정보 모델에 추가
                 USerm us = uRepository.findById(userid).get();  //id에 해당하는 정보를 가져와 모델에 추가
                 model.addAttribute("userclass", us);
                 photoService.plus_viewcount(photoEntity.getId());
+
+                List<COMMENT> clist = commentService.getcomments();
+                List<String> cmmtlist=new ArrayList<>();
+                List<String> idlist=new ArrayList<>();
+                List<Long> cmtidlist = new ArrayList<>();
+                for (COMMENT c : clist) {
+                    System.out.println("let me see ..."+c.getPhotoid()+" and " +id);
+                    if (c.getPhotoid().equals(id)){
+                        System.out.println("oops! i found it !!!!!!!!!!!!!!");
+                        cmmtlist.add(c.getCommentstring());
+                        USerm tmp = uRepository.findById(c.getUserid()).get();
+                        idlist.add(tmp.getNick_name());
+                        cmtidlist.add(c.getId());
+                    }
+                }
+                model.addAttribute("commentsString", cmmtlist);
+                model.addAttribute("commentsId",idlist);
+                model.addAttribute("cmtId",cmtidlist);
+
                 return "ImageView";
             }
         }
@@ -141,6 +169,21 @@ public class HomeController {
     public RedirectView upgradeUser(@PathVariable Long id) {
         userService.upgradeUSer(id);  //해당 id의 회원 등급 업그레이드
         return new RedirectView("/userList.html");
+    }
+
+    @PostMapping("/userList.html/{id}/permit")
+    public RedirectView permitUser(@PathVariable Long id) {
+        userService.permitUSer(id);  //해당 id의 회원 등급 업그레이드
+        return new RedirectView("/userList.html");
+    }
+
+    @PostMapping("/{userid}/ImageView.html/{id}/{cmtid}/commentdelete")
+    public RedirectView deleteComment(@PathVariable Long userid,
+                                      @PathVariable Long id,
+                                      @PathVariable Long cmtid) {
+        commentService.deleteComment(cmtid);  //해당 id의 사진 삭제
+        return new RedirectView("/"+userid+"/ImageView.html/"+id);
+        // return "Index";
     }
 
     @ResponseBody

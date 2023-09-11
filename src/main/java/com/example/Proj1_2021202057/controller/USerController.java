@@ -26,13 +26,13 @@ public class USerController {
     @Autowired
     private URepository USerRepository;
 
-    private Long current_login_class=0L;
 
     @PostMapping("/userInfo") //회원가입창에서 아이디와 비밀번호를 입력받았을 때
     public RedirectView handleUserInfo(@ModelAttribute("usInfo") USerm usInfo, Model model) {
         try{
             List<USerm> list = USerService.getUserList();
             boolean IsExist = false;
+
 
             for (USerm user : list) {
                 System.out.println(user.getUserid()+"  "+usInfo.getUserid());
@@ -46,8 +46,8 @@ public class USerController {
                 model.addAttribute("message", "이미 존재하는 아이디입니다.");
                 return new RedirectView("/JoinMem.html");
             }
-
-            USerService.saveUser(usInfo);
+            usInfo.setIspermit("false");    //회원가입 승인 여부 false
+            USerService.saveUser(usInfo);   //사용자 정보 database에 저장
         } catch(Exception e){
             e.printStackTrace();
             // 오류 메시지 표시
@@ -61,11 +61,13 @@ public class USerController {
         try{
             List<USerm> list = USerService.getUserList();
             Long userid = 0L;   //유저 아이디 임시로 초기화
+            Long current_login_class=0L;
             boolean userFound = false;
+
             for (USerm user : list) {
                 System.out.println(user.getUserid()+"  "+usInfo.getUserid());
-                if (user.getUserid().equals(usInfo.getUserid()) &&
-                        user.getPassword().equals(usInfo.getPassword())) {
+                if (user.getUserid().equals(usInfo.getUserid()) &&  //아이디와 비번이 동일해야하고 관리자의 승인을 받은 상태여야함.
+                        user.getPassword().equals(usInfo.getPassword())  && user.getIspermit().equals("true")) {
                     current_login_class = user.getId();  //해당 유저 아이디 저장
 
                     userFound = true;
@@ -74,7 +76,7 @@ public class USerController {
             }
             if (userFound) {
                 // 로그인 성공 시 처리
-                return new RedirectView(current_login_class+"/Index.html");
+                return new RedirectView(current_login_class+"/Index.html"); //로그인한 유저의 id를 경로에 넣어줌
             } else if(!userFound) {
                 // 로그인 실패 시 처리
                // return new RedirectView("/Error.html");
@@ -82,6 +84,7 @@ public class USerController {
 
 
         } catch(Exception e){
+            e.printStackTrace();
             return new RedirectView("/Error.html"); //에러 페이지로 Redirection
         }
         return new RedirectView("/Login.html"); //로그인 페이지로 redirection
@@ -94,7 +97,5 @@ public class USerController {
         return "redirect:/login"; // 가입 후 로그인 페이지로 리다이렉트
     }
 */
-    public Long getCurrent_login_class(){
-        return current_login_class;
-    }
+
 }

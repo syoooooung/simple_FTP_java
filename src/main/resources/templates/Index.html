@@ -67,7 +67,7 @@
     <h1>게시물 목록</h1>
     <div class = "button-container">
         <a th:href="@{'/'+${userclass.id} +'/Upload.html'}" style="margin-right: 10px;">
-            <button type="button">사진 올리기</button>
+            <button type="button">게시물 올리기</button>
         </a>
         <th:block th:if="${userclass.user_class} == 'manager_us'">
             <a th:href="@{'/userList.html'}" style="float:right;">

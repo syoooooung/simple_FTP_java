@@ -78,4 +78,11 @@ public class USerService {
         USerm uus = us.get();
         uus.setUser_class("normal_us");
     }
+
+    @Transactional
+    public void permitUSer(Long id){
+        Optional<USerm> us = userRepository.findById(id);
+        USerm uus = us.get();
+        uus.setIspermit("true");
+    }
 }

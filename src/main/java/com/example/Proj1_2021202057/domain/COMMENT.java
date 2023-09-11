@@ -6,25 +6,20 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-
 @Entity
 @Getter
 @Setter
 @EntityListeners({AuditingEntityListener.class}) // Entity에서 특정 이벤트 수행을 위한 어노테이션
 @NoArgsConstructor // 기본 생성자 생성 어노테이션
-public class USerm {
+public class COMMENT {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String userid;
+    private Long photoid;
     @Column
-    private String password;
+    private Long userid;
     @Column
-    private String Nick_name;
-    @Column
-    private String user_class; //manager_us, new_us, normal_us
-    @Column
-    private String ispermit;
+    private String commentstring; //manager_us, new_us, normal_us
 }
